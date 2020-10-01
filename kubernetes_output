@@ -1,0 +1,82 @@
+
+[root@kmaster node]# kubectl get all
+NAME                              READY   STATUS         RESTARTS   AGE
+pod/dec-server                    1/1     Running        1          30d
+pod/dev-server                    1/1     Running        1          30d
+pod/hello-node-5984758c4b-sqhpg   1/1     Running        0          4m17s
+pod/memory-demo                   0/1     ErrImagePull   0          30d
+pod/server                        1/1     Running        1          30d
+
+NAME                         TYPE           CLUSTER-IP     EXTERNAL-IP   PORT(S)          AGE
+service/hello-node-service   LoadBalancer   10.102.4.163   <pending>     8081:32049/TCP   85d
+service/kubernetes           ClusterIP      10.96.0.1      <none>        443/TCP          85d
+
+NAME                         READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/hello-node   1/1     1            1           85d
+
+NAME                                    DESIRED   CURRENT   READY   AGE
+replicaset.apps/hello-node-574b6d5b77   0         0         0       85d
+replicaset.apps/hello-node-5984758c4b   1         1         1       4m18s
+replicaset.apps/hello-node-9cd765ddf    0         0         0       32m
+
+[root@kmaster node]# kubectl get po -o wide
+NAME                          READY   STATUS             RESTARTS   AGE     IP            NODE      NOMINATED NODE   READINESS GATES
+dec-server                    1/1     Running            1          30d     172.17.0.10   kmaster   <none>           <none>
+dev-server                    1/1     Running            1          30d     172.17.0.11   kmaster   <none>           <none>
+hello-node-5984758c4b-sqhpg   1/1     Running            0          4m45s   172.17.0.14   kmaster   <none>           <none>
+memory-demo                   0/1     ImagePullBackOff   0          30d     172.17.0.12   kmaster   <none>           <none>
+server                        1/1     Running            1          30d     172.17.0.9    kmaster   <none>           <none>
+[root@kmaster node]# 
+[root@kmaster node]# 
+[root@kmaster node]# kubectl describe pod/hello-node-5984758c4b-sqhpg
+Name:         hello-node-5984758c4b-sqhpg
+Namespace:    default
+Priority:     0
+Node:         kmaster/172.25.8.100
+Start Time:   Wed, 30 Sep 2020 23:20:28 -0400
+Labels:       app=hello-node
+              pod-template-hash=5984758c4b
+Annotations:  <none>
+Status:       Running
+IP:           172.17.0.14
+IPs:
+  IP:           172.17.0.14
+Controlled By:  ReplicaSet/hello-node-5984758c4b
+Containers:
+  hello-node:
+    Container ID:   docker://5e2992bd71bf8c280ed9b96e59b0ad2d155ee92f49bf55ab08e759aac65077c4
+    Image:          kanchanv/node:2.0
+    Image ID:       docker-pullable://kanchanv/node@sha256:8ec276d763e2c25bca0488b1fb57200e92102a4abba53fa0074c3ce613176199
+    Port:           8081/TCP
+    Host Port:      0/TCP
+    State:          Running
+      Started:      Wed, 30 Sep 2020 23:20:31 -0400
+    Ready:          True
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from default-token-rvgb5 (ro)
+Conditions:
+  Type              Status
+  Initialized       True 
+  Ready             True 
+  ContainersReady   True 
+  PodScheduled      True 
+Volumes:
+  default-token-rvgb5:
+    Type:        Secret (a volume populated by a Secret)
+    SecretName:  default-token-rvgb5
+    Optional:    false
+QoS Class:       BestEffort
+Node-Selectors:  <none>
+Tolerations:     node.kubernetes.io/not-ready:NoExecute for 300s
+                 node.kubernetes.io/unreachable:NoExecute for 300s
+Events:
+  Type    Reason     Age    From               Message
+  ----    ------     ----   ----               -------
+  Normal  Scheduled  6m52s  default-scheduler  Successfully assigned default/hello-node-5984758c4b-sqhpg to kmaster
+  Normal  Pulled     6m50s  kubelet, kmaster   Container image "kanchanv/node:2.0" already present on machine
+  Normal  Created    6m50s  kubelet, kmaster   Created container hello-node
+  Normal  Started    6m49s  kubelet, kmaster   Started container hello-node
+[root@kmaster node]# 
+
